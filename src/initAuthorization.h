@@ -1,5 +1,5 @@
 /*
-   initAuthorization header V1.0.0
+   initAuthorization library V1.0.0
    Created by Milad Nikpendar
 */
 #ifndef INIT_AUTHORIZATION_H
