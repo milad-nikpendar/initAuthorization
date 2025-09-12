@@ -2,10 +2,11 @@
 
 bool Authorization::checkInternal(const String &chip_ID)
 {
-    begin();    // Open Preferences
+    begin();                                                   // Open Preferences
+    String storedID = Parameter.getString("chip-ID", "empty"); // Default to "empty" if not set
 
-    // If no chip ID is stored, save the current one
-    if (!Parameter.isKey("chip-ID"))
+    // If no ID is stored, register the current chip ID
+    if (storedID == "empty")
     {
         Serial.println("✅ System authorization registered.");
         Parameter.putString("chip-ID", chip_ID);
@@ -13,17 +14,7 @@ bool Authorization::checkInternal(const String &chip_ID)
         return true;
     }
 
-    size_t len = Parameter.getBytesLength("chip-ID");
-    if (len <= 0) {
-        Serial.println("✅ System authorization registered.");
-        Parameter.putString("chip-ID", chip_ID);
-        end();
-        return true;
-    }
-    
-    // Retrieve and compare the stored chip ID
-    String storedID = Parameter.getString("chip-ID", "");
-    end();
+    end(); // Close Preferences
 
     // If they match, authorization is successful
     if (storedID == chip_ID)
@@ -38,9 +29,9 @@ bool Authorization::check(const String &chip_ID)
 {
     return checkInternal(chip_ID);
 }
- 
+
 // Check authorization using const char*
-bool Authorization::check(const char* chip_ID)
+bool Authorization::check(const char *chip_ID)
 {
     return checkInternal(String(chip_ID));
 }
