@@ -13,6 +13,14 @@ bool Authorization::checkInternal(const String &chip_ID)
         return true;
     }
 
+    size_t len = Parameter.getBytesLength("chip-ID");
+    if (len <= 0) {
+        Serial.println("✅ System authorization registered.");
+        Parameter.putString("chip-ID", chip_ID);
+        end();
+        return true;
+    }
+    
     // Retrieve and compare the stored chip ID
     String storedID = Parameter.getString("chip-ID", "");
     end();
@@ -22,9 +30,6 @@ bool Authorization::checkInternal(const String &chip_ID)
         return true;
 
     Serial.println("❌ Unauthorized device detected!");
-    while (true)
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
     return false;
 }
 
